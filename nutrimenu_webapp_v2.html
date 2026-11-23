@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriMenú | Menú inteligente</title>
+<style>
+
+:root{--green:#315b42;--deep:#203d2d;--mint:#e8eee5;--blue:#315b42;--ink:#26342b;--muted:#72786f;--bg:#f4f1e8;--white:#fffdf8;--red:#a74736;--gold:#c18a3d;--shadow:0 5px 18px #332b1d0b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+header{background:#f4f1e8;color:var(--ink);padding:17px max(22px,calc((100% - 1160px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:5;border-bottom:1px solid #d9d3c5}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:1.3rem;letter-spacing:-.7px}.logo{height:38px;width:38px;background:#315b42;color:#fff;border-radius:50%;display:grid;place-items:center;font-size:20px}
+nav{display:flex;gap:5px;flex-wrap:wrap}nav button{border:0;color:#596458;background:transparent;border-radius:3px;padding:10px 13px;font-family:Arial,sans-serif;font-size:.83rem;cursor:pointer}nav button.active,nav button:hover{background:#315b42;color:#fff}
+main{max-width:1160px;margin:34px auto;padding:0 22px 60px}
+.hero{background:#e7e9dc;border-radius:2px;color:var(--ink);padding:38px 42px;display:grid;grid-template-columns:1.5fr .5fr;gap:20px;align-items:center;box-shadow:none;border-top:4px solid #315b42}
+.hero h1{font-family:Georgia,serif;font-size:clamp(2.4rem,5vw,4.15rem);line-height:.98;font-weight:500;margin:12px 0 17px;letter-spacing:-2px}.hero p{color:#586357;max-width:610px;line-height:1.7;font-family:Arial,sans-serif;font-size:.96rem}
+.hero-mark{font-size:88px;text-align:center;filter:none}.eyebrow{text-transform:uppercase;letter-spacing:2px;font:700 .69rem Arial,sans-serif;color:#526b50}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.btn{border:1px solid #315b42;border-radius:2px;padding:11px 16px;font:700 .8rem Arial,sans-serif;letter-spacing:.2px;cursor:pointer;background:#315b42;color:#fff;transition:.15s}
+.btn:hover{background:#203d2d;transform:translateY(-1px)}.btn.light{background:#f4f1e8;color:#315b42;border-color:#b8c1b2}.btn.outline{background:transparent;border:1px solid #b8b7aa;color:var(--ink)}.btn.danger{background:#f5e8e4;color:var(--red);border-color:#e3c6bd}.btn.small{padding:7px 10px;font-size:.74rem}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:22px 0 38px;border-top:1px solid #d9d3c5;border-bottom:1px solid #d9d3c5}
+.stat{padding:16px 20px;background:transparent;border:0;border-right:1px solid #d9d3c5;border-radius:0;box-shadow:none}.stat:last-child{border-right:0}.stat b{font:500 1.8rem Georgia,serif;color:#315b42;display:block}.stat span{font: .76rem Arial,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:34px 0 17px;border-bottom:1px solid #d9d3c5;padding-bottom:12px}.section-head h2{font:500 1.85rem Georgia,serif;margin:0;letter-spacing:-.5px}.section-head p{margin:5px 0 0;color:var(--muted);font: .86rem Arial,sans-serif}
+.layout{display:grid;grid-template-columns:265px 1fr;gap:26px}
+.panel,.dish{background:var(--white);border:1px solid #e3ded2;border-radius:2px;box-shadow:none}.panel{padding:20px}.panel h3{font:600 1.12rem Georgia,serif;margin:0 0 14px}
+.field{margin:14px 0}.field label{font:700 .77rem Arial,sans-serif;display:block;margin-bottom:7px;color:#536052}.field input,.field select,.field textarea{width:100%;border:1px solid #d8d4c8;border-radius:2px;padding:10px 11px;font: .87rem Arial,sans-serif;background:#fffefa;color:var(--ink)}.field textarea{min-height:75px;resize:vertical}
+.checks{display:grid;gap:9px}.check{display:flex;gap:8px;align-items:center;font:.85rem Arial,sans-serif;color:#485248}.check input{accent-color:var(--green);width:15px;height:15px}
+.notice{padding:12px 14px;background:#f5eee0;border-left:3px solid #c18a3d;color:#6d5631;border-radius:0;font:.79rem/1.55 Arial,sans-serif;margin-top:13px}.safe-note{padding:12px 14px;background:#edf1e9;border-left:3px solid #66805d;color:#425a42;border-radius:0;font:.8rem/1.55 Arial,sans-serif}
+.menu-tools{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:15px}.menu-tools input,.menu-tools select{border:1px solid #d8d4c8;background:#fffefa;border-radius:2px;padding:10px;font:.85rem Arial,sans-serif}.menu-tools input{flex:1;min-width:170px}
+.dishes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.dish{overflow:hidden;transition:border-color .15s}.dish:hover{border-color:#9aab96}
+.dish-top{height:108px;background:#e8e9dc;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative}
+.tag{position:absolute;top:10px;left:10px;background:#f9f6ed;border:1px solid #d8d4c8;border-radius:2px;padding:5px 8px;font:700 .65rem Arial,sans-serif;text-transform:uppercase;letter-spacing:.5px;color:#526b50}
+.dish-body{padding:15px}.dish h3{font:600 1.2rem Georgia,serif;margin:0 0 6px}.dish p{margin:0;color:var(--muted);font:.83rem/1.5 Arial,sans-serif}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.pill{font:.69rem Arial,sans-serif;background:#edf0e8;color:#53644e;padding:5px 8px;border-radius:2px}
+.dish-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #eee9df;padding-top:11px}.dish-foot strong{font:600 .96rem Arial,sans-serif;color:#315b42}.dish-actions{display:flex;gap:6px;flex-wrap:wrap}
+.hidden{display:none!important}.empty{padding:28px;text-align:center;color:var(--muted);background:var(--white);border:1px dashed #c9c3b5;border-radius:2px;grid-column:1/-1;font: .9rem Arial,sans-serif}
+.tab{display:none}.tab.active{display:block}.profile-summary{background:#edf1e9;padding:12px;border-left:3px solid #66805d;border-radius:0;font:.8rem/1.5 Arial,sans-serif;margin-top:12px}
+.admin-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:18px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font:.82rem Arial,sans-serif}.table th,.table td{text-align:left;padding:11px 9px;border-bottom:1px solid #e7e2d8;vertical-align:top}.table th{color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.7px}
+.kitchen-card{padding:14px;border:1px solid #e3ded2;border-radius:2px;margin:10px 0;background:#fffefa}.kitchen-card strong{display:block;font:600 1rem Georgia,serif}.kitchen-card p{font:.82rem/1.5 Arial,sans-serif;color:var(--muted);margin:6px 0}
+footer{text-align:center;color:#7d8077;font:.75rem/1.7 Arial,sans-serif;padding:26px 15px;border-top:1px solid #d9d3c5}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#203d2d;color:white;padding:12px 18px;border-radius:2px;box-shadow:var(--shadow);z-index:20;opacity:0;pointer-events:none;transition:.2s;font:.82rem Arial,sans-serif}.toast.show{opacity:1}
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding:28px 24px}.hero-mark{display:none}.layout,.admin-grid{grid-template-columns:1fr}.dishes{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.stat{border-right:0;border-bottom:1px solid #d9d3c5}.stat:last-child{border-bottom:0}.section-head{align-items:start;flex-direction:column}header{align-items:flex-start;flex-direction:column}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">🥗</div><span>Nutri<span style="color:#a9b99e">Menú</span></span></div>
+  <nav>
+    <button class="active" data-tab="cliente">Menú cliente</button>
+    <button data-tab="cocina">Cocina</button>
+    <button data-tab="admin">Restaurante</button>
+  </nav>
+</header>
+<main>
+<section class="hero">
+ <div><div class="eyebrow">Menús inteligentes · Demo interactiva</div><h1>Come con confianza.<br>Elige a tu manera.</h1><p>Un menú digital que adapta los platillos a tus alergias, intolerancias y preferencias. Escanea el QR, configura tu perfil y descubre opciones compatibles.</p><div class="actions"><button class="btn light" onclick="document.getElementById('perfil').scrollIntoView({behavior:'smooth'})">Configurar mi perfil</button><button class="btn" onclick="showTab('admin')">Administrar menú</button></div></div>
+ <div class="hero-mark">🍃🍽️</div>
+</section>
+<div class="stats">
+ <div class="stat"><b id="visibleCount">6</b><span>platillos disponibles para tu perfil</span></div>
+ <div class="stat"><b id="restrictionCount">0</b><span>restricciones seleccionadas</span></div>
+ <div class="stat"><b>100%</b><span>menú de demostración editable</span></div>
+</div>
+
+<section id="cliente" class="tab active">
+ <div class="section-head"><div><h2>Tu menú personalizado</h2><p>Los platillos incompatibles se ocultan automáticamente.</p></div><span class="pill">Restaurante demo · Menú QR</span></div>
+ <div class="layout">
+  <aside class="panel" id="perfil">
+   <h3>👤 Mi perfil alimentario</h3>
+   <div class="field"><label for="diet">Preferencia alimentaria</label><select id="diet"><option value="">Sin preferencia</option><option value="vegetariano">Vegetariano</option><option value="vegano">Vegano</option></select></div>
+   <div class="field"><label>Alergias e intolerancias</label><div class="checks" id="allergyChecks">
+    <label class="check"><input type="checkbox" value="gluten"> Gluten</label>
+    <label class="check"><input type="checkbox" value="lacteos"> Lácteos</label>
+    <label class="check"><input type="checkbox" value="huevo"> Huevo</label>
+    <label class="check"><input type="checkbox" value="cacahuate"> Cacahuate</label>
+    <label class="check"><input type="checkbox" value="nueces"> Nueces</label>
+    <label class="check"><input type="checkbox" value="soya"> Soya</label>
+    <label class="check"><input type="checkbox" value="mariscos"> Mariscos</label>
+   </div></div>
+   <div class="field"><label for="goal">Objetivo / preferencia</label><select id="goal"><option value="">Mostrar todo lo compatible</option><option value="alto-proteina">Alto en proteína</option><option value="ligero">Opciones ligeras</option></select></div>
+   <button class="btn" style="width:100%" onclick="applyProfile()">Aplicar filtros</button>
+   <button class="btn outline" style="width:100%;margin-top:8px" onclick="resetProfile()">Limpiar perfil</button>
+   <div class="notice"><b>Importante:</b> este prototipo es informativo. En alergias graves, confirma directamente con el restaurante los ingredientes, la preparación y el riesgo de contaminación cruzada.</div>
+   <div class="profile-summary" id="profileSummary">Aún no has seleccionado restricciones.</div>
+  </aside>
+  <div>
+   <div class="menu-tools"><input id="searchDish" placeholder="Buscar platillo..." oninput="renderMenu()"><select id="category" onchange="renderMenu()"><option value="">Todas las categorías</option><option>Desayuno</option><option>Comida</option><option>Ensalada</option><option>Bebida</option></select></div>
+   <div class="dishes" id="dishes"></div>
+  </div>
+ </div>
+</section>
+
+<section id="cocina" class="tab">
+ <div class="section-head"><div><h2>Panel de cocina</h2><p>Solicitudes de modificación generadas desde el menú del cliente.</p></div><span class="pill">Vista de demostración</span></div>
+ <div class="panel"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><h3 style="margin:0">Comandas y sugerencias</h3><button class="btn small outline" onclick="clearOrders()">Limpiar solicitudes</button></div><div id="orders"><p style="color:var(--muted)">Todavía no hay solicitudes. En el menú del cliente, selecciona “Solicitar modificación”.</p></div></div>
+ <div class="safe-note" style="margin-top:14px"><b>Regla de seguridad del proyecto:</b> las sugerencias son propuestas para revisión del chef. Ningún cambio se considera aprobado hasta que cocina confirme ingredientes, preparación y disponibilidad.</div>
+</section>
+
+<section id="admin" class="tab">
+ <div class="section-head"><div><h2>Panel del restaurante</h2><p>Administra la carta e ingredientes para mantener actualizado el menú digital.</p></div><span class="pill">Back-office B2B</span></div>
+ <div class="admin-grid">
+  <form class="panel" id="dishForm">
+   <h3 id="formTitle">➕ Agregar platillo</h3>
+   <input type="hidden" id="editId">
+   <div class="field"><label>Nombre del platillo</label><input id="dishName" required placeholder="Ej. Ensalada de quinoa"></div>
+   <div class="field"><label>Descripción</label><textarea id="dishDesc" required placeholder="Describe el platillo y sus ingredientes principales"></textarea></div>
+   <div class="field"><label>Categoría</label><select id="dishCategory"><option>Desayuno</option><option>Comida</option><option>Ensalada</option><option>Bebida</option></select></div>
+   <div class="field"><label>Precio (MXN)</label><input id="dishPrice" type="number" min="0" step="1" required placeholder="120"></div>
+   <div class="field"><label>Emoji / imagen representativa</label><input id="dishEmoji" maxlength="4" value="🍽️"></div>
+   <div class="field"><label>Ingredientes y alérgenos (separados por coma)</label><input id="dishIngredients" required placeholder="pollo, lácteos, gluten"></div>
+   <div class="field"><label>Tipo</label><select id="dishType"><option value="normal">General</option><option value="vegetariano">Vegetariano</option><option value="vegano">Vegano</option></select></div>
+   <div class="field"><label>Información nutrimental (aproximada)</label><input id="dishNutrition" placeholder="450 kcal · 28 g proteína"></div>
+   <button class="btn" type="submit">Guardar platillo</button><button class="btn outline" type="button" onclick="resetForm()">Cancelar</button>
+  </form>
+  <div class="panel"><h3>📋 Carta del restaurante</h3><p style="color:var(--muted);font-size:.86rem">Edita los datos del menú. Los cambios se reflejan en la vista del cliente.</p><div class="table-wrap"><table class="table"><thead><tr><th>Platillo</th><th>Precio</th><th>Ingredientes</th><th>Acciones</th></tr></thead><tbody id="adminRows"></tbody></table></div></div>
+ </div>
+ <div class="panel" style="margin-top:18px"><h3>📊 Resumen del menú</h3><div id="adminSummary" style="color:var(--muted)">Cargando...</div></div>
+</section>
+</main>
+<footer>NutriMenú · Prototipo académico de web app · Equipo 8 · Tralaleritos<br>La información nutrimental es ilustrativa y debe validarse con datos reales del restaurante.</footer>
+<div class="toast" id="toast"></div>
+<script>
+const seed=[
+{id:1,name:"Bowl de pollo",desc:"Pollo a la plancha con arroz, aguacate y verduras frescas.",category:"Comida",price:145,emoji:"🥗",ingredients:["pollo","arroz","aguacate","verduras"],type:"normal",nutrition:"520 kcal · 38 g proteína"},
+{id:2,name:"Pasta cremosa",desc:"Pasta con salsa cremosa de queso y hierbas.",category:"Comida",price:135,emoji:"🍝",ingredients:["gluten","lácteos","trigo"],type:"vegetariano",nutrition:"610 kcal · 19 g proteína"},
+{id:3,name:"Ensalada mediterránea",desc:"Mezcla de hojas verdes, jitomate, pepino, aceitunas y semillas.",category:"Ensalada",price:118,emoji:"🥬",ingredients:["verduras","aceitunas","semillas"],type:"vegano",nutrition:"310 kcal · 9 g proteína"},
+{id:4,name:"Omelette de verduras",desc:"Huevo con espinaca, jitomate y queso.",category:"Desayuno",price:110,emoji:"🍳",ingredients:["huevo","lácteos","verduras"],type:"vegetariano",nutrition:"390 kcal · 24 g proteína"},
+{id:5,name:"Tazón de fruta",desc:"Fruta de temporada con yogurt natural.",category:"Desayuno",price:85,emoji:"🍓",ingredients:["fruta","lácteos"],type:"vegetariano",nutrition:"260 kcal · 10 g proteína"},
+{id:6,name:"Agua de limón",desc:"Agua fresca de limón preparada al momento.",category:"Bebida",price:42,emoji:"🍋",ingredients:["limón","agua","azúcar"],type:"vegano",nutrition:"90 kcal · 0 g proteína"}
+];
+let dishes=JSON.parse(localStorage.getItem("nutrimenu-dishes")||"null")||seed;
+let selectedAllergies=[], selectedDiet="", selectedGoal="", orders=[];
+const allergyMap={gluten:["gluten","trigo"],lacteos:["lácteos","leche","queso","yogurt","yogur"],huevo:["huevo"],cacahuate:["cacahuate","maní"],nueces:["nueces","almendra","nuez"],soya:["soya","soja"],mariscos:["mariscos","camarón","camarones"]};
+const pretty={gluten:"gluten",lacteos:"lácteos",huevo:"huevo",cacahuate:"cacahuate",nueces:"nueces",soya:"soya",mariscos:"mariscos"};
+function norm(s){return (s||"").toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function save(){localStorage.setItem("nutrimenu-dishes",JSON.stringify(dishes));}
+function toast(msg){let t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2300)}
+function showTab(id){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("active",x.dataset.tab===id));if(id==="admin")renderAdmin();if(id==="cocina")renderOrders();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+function applyProfile(){selectedAllergies=[...document.querySelectorAll("#allergyChecks input:checked")].map(x=>x.value);selectedDiet=document.getElementById("diet").value;selectedGoal=document.getElementById("goal").value;document.getElementById("restrictionCount").textContent=selectedAllergies.length+(selectedDiet?1:0);let bits=[];if(selectedAllergies.length)bits.push("Evitar: "+selectedAllergies.map(x=>pretty[x]).join(", "));if(selectedDiet)bits.push("Preferencia: "+selectedDiet);if(selectedGoal)bits.push("Objetivo: "+(selectedGoal==="alto-proteina"?"alto en proteína":"opciones ligeras"));document.getElementById("profileSummary").textContent=bits.join(" · ")||"Sin restricciones seleccionadas. Se mostrará el menú completo.";renderMenu();toast("Perfil aplicado al menú");}
+function resetProfile(){document.querySelectorAll("#allergyChecks input").forEach(x=>x.checked=false);document.getElementById("diet").value="";document.getElementById("goal").value="";applyProfile();}
+function compatible(d){let ing=d.ingredients.map(norm);for(let a of selectedAllergies){if(allergyMap[a].some(word=>ing.some(i=>i.includes(norm(word)))))return false;}if(selectedDiet==="vegetariano"&&d.type!=="vegetariano"&&d.type!=="vegano")return false;if(selectedDiet==="vegano"&&d.type!=="vegano")return false;return true;}
+function renderMenu(){let q=norm(document.getElementById("searchDish").value),cat=document.getElementById("category").value;let arr=dishes.filter(d=>compatible(d)&&(!cat||d.category===cat)&&(!q||norm(d.name+" "+d.desc+" "+d.ingredients.join(" ")).includes(q)));if(selectedGoal==="alto-proteina")arr=arr.filter(d=>parseInt((d.nutrition.match(/(\d+)\s*g\s*proteína/i)||[])[1]||0)>=20);if(selectedGoal==="ligero")arr=arr.filter(d=>parseInt((d.nutrition.match(/(\d+)\s*kcal/i)||[])[1]||9999)<=400);document.getElementById("visibleCount").textContent=arr.length;let root=document.getElementById("dishes");root.innerHTML=arr.length?arr.map(d=>`<article class="dish"><div class="dish-top"><span class="tag">${d.category}</span>${d.emoji||"🍽️"}</div><div class="dish-body"><h3>${esc(d.name)}</h3><p>${esc(d.desc)}</p><div class="meta"><span class="pill">${esc(d.nutrition||"Información nutrimental pendiente")}</span><span class="pill">${d.type==="vegano"?"Vegano":d.type==="vegetariano"?"Vegetariano":"General"}</span></div><div class="dish-foot"><strong>$${Number(d.price).toFixed(0)} MXN</strong><button class="btn small" onclick="requestDish(${d.id})">Solicitar modificación</button></div></div></article>`).join(""):'<div class="empty">No encontramos platillos con esos filtros. Prueba quitando alguna restricción o consulta con el personal.</div>';}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function requestDish(id){let d=dishes.find(x=>x.id===id);let reasons=selectedAllergies.map(x=>pretty[x]);if(selectedDiet)reasons.push(selectedDiet);orders.unshift({id:Date.now(),dish:d.name,reasons:reasons.length?reasons:["Solicitud general"],suggestion:makeSuggestion(d),status:"Pendiente"});toast("Solicitud enviada a cocina");}
+function makeSuggestion(d){if(selectedAllergies.length)return "Revisar con cocina una alternativa sin: "+selectedAllergies.map(x=>pretty[x]).join(", ")+". Confirmar ingredientes y contaminación cruzada.";if(selectedDiet==="vegano")return "Revisar una adaptación 100% vegetal y confirmar todos los ingredientes.";if(selectedDiet==="vegetariano")return "Revisar una adaptación sin carne ni pescado.";return "Consultar disponibilidad de modificación con cocina.";}
+function renderOrders(){let el=document.getElementById("orders");el.innerHTML=orders.length?orders.map(o=>`<div class="kitchen-card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><strong>${esc(o.dish)}</strong><span class="pill">${esc(o.status)}</span></div><p>Perfil: ${esc(o.reasons.join(", "))}</p><p><b>Sugerencia:</b> ${esc(o.suggestion)}</p><button class="btn small" onclick="approveOrder(${o.id})">Marcar revisada</button></div>`).join(""):'<p style="color:var(--muted)">Todavía no hay solicitudes. En el menú del cliente, selecciona “Solicitar modificación”.</p>';}
+function approveOrder(id){let o=orders.find(x=>x.id===id);if(o)o.status="Revisada por cocina";renderOrders();toast("Solicitud marcada como revisada");}
+function clearOrders(){orders=[];renderOrders();}
+function renderAdmin(){document.getElementById("adminRows").innerHTML=dishes.map(d=>`<tr><td><b>${esc(d.emoji)} ${esc(d.name)}</b><br><span style="color:#64748b">${esc(d.category)}</span></td><td>$${Number(d.price).toFixed(0)}</td><td>${esc(d.ingredients.join(", "))}</td><td><button class="btn small outline" onclick="editDish(${d.id})">Editar</button> <button class="btn small danger" onclick="deleteDish(${d.id})">Eliminar</button></td></tr>`).join("");document.getElementById("adminSummary").textContent=`${dishes.length} platillos registrados · ${dishes.filter(d=>d.type==="vegano").length} veganos · ${dishes.filter(d=>d.type==="vegetariano").length} vegetarianos.`;}
+document.getElementById("dishForm").addEventListener("submit",e=>{e.preventDefault();let id=Number(document.getElementById("editId").value);let obj={id:id||Date.now(),name:document.getElementById("dishName").value.trim(),desc:document.getElementById("dishDesc").value.trim(),category:document.getElementById("dishCategory").value,price:Number(document.getElementById("dishPrice").value),emoji:document.getElementById("dishEmoji").value||"🍽️",ingredients:document.getElementById("dishIngredients").value.split(",").map(x=>x.trim()).filter(Boolean),type:document.getElementById("dishType").value,nutrition:document.getElementById("dishNutrition").value.trim()||"Información nutrimental pendiente"};if(id)dishes=dishes.map(d=>d.id===id?obj:d);else dishes.push(obj);save();resetForm();renderAdmin();renderMenu();toast(id?"Platillo actualizado":"Platillo agregado");});
+function editDish(id){let d=dishes.find(x=>x.id===id);if(!d)return;document.getElementById("editId").value=d.id;document.getElementById("dishName").value=d.name;document.getElementById("dishDesc").value=d.desc;document.getElementById("dishCategory").value=d.category;document.getElementById("dishPrice").value=d.price;document.getElementById("dishEmoji").value=d.emoji;document.getElementById("dishIngredients").value=d.ingredients.join(", ");document.getElementById("dishType").value=d.type;document.getElementById("dishNutrition").value=d.nutrition;document.getElementById("formTitle").textContent="✏️ Editar platillo";document.getElementById("dishForm").scrollIntoView({behavior:"smooth"});}
+function deleteDish(id){if(!confirm("¿Eliminar este platillo del menú?"))return;dishes=dishes.filter(d=>d.id!==id);save();renderAdmin();renderMenu();toast("Platillo eliminado");}
+function resetForm(){document.getElementById("dishForm").reset();document.getElementById("editId").value="";document.getElementById("formTitle").textContent="➕ Agregar platillo";document.getElementById("dishEmoji").value="🍽️";}
+renderMenu();renderAdmin();
+</script>
+</body>
+</html>
